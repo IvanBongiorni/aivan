@@ -1,6 +1,8 @@
 <center> 
   [GitHub](https://github.com/IvanBongiorni) 
+  
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  
   [LinkedIn]() 
 </center>
 
