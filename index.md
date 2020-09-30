@@ -1,8 +1,8 @@
-[CV]()
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+[CV](files/Ivan_Bongiorni_CV.pdf)
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 [GitHub](https://github.com/IvanBongiorni) 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-[LinkedIn]() 
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+[LinkedIn](https://www.linkedin.com/in/ivan-bongiorni-b8a583164/) 
 
 ---------
 
