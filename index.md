@@ -1,4 +1,4 @@
-GitHub &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LinkedIn
+<center>GitHub &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LinkedIn</center>
 
 ## Welcome to GitHub Pages
 
