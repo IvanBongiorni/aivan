@@ -13,5 +13,5 @@ My plan is to fill this blog with AI and ML-releted things that I find interesti
 <br/>
 
 ### Posts
-- An Overwiew of Attention Mechanisms in Deep Neural Networks   \[ WORK IN PROGRESS \]
+- [An Overwiew of Attention Mechanisms in Deep Neural Networks](posts/overwiew-of-attention-mechanisms-in-neural-networks.md)   \[ WORK IN PROGRESS \]
 - Create Custom Training Functions in TensorFlow 2 (with Autograph)   \[ WORK IN PROGRESS \]
