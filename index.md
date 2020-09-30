@@ -4,6 +4,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 [LinkedIn]() 
 
+---------
+
 <br/>
 
 Welcome! My name is **Ivan Bongiorni**, I am a **Data Scientist**. 
