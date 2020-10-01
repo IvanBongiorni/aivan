@@ -31,7 +31,7 @@ Their problems are well known: they struggle to process long sequences.
 Imagine a typical seq2seq model with LSTM layers:
 
 <a href="url" align="center">
-<img src="https://raw.githubusercontent.com/IvanBongiorni/aivan/blob/gh-pages/images/seq2seq_00.png">
+<img src="images/seq2seq_00.png">
 </a>
 
 Let’s assume a very relevant bit of information is located far away in the input sequence (let’s say at the very beginning of it). 
