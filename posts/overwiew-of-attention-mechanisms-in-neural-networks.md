@@ -61,15 +61,30 @@ It’s the first successful formulation of attention mechanism, proposed by Bahd
 That’s what they did: in a Seq2seq model, between the Encoder and Decoder, the added an Attention block: 
 nothing more than a simple feed forward layer that, for each of the steps produced by the Decoder, learns how to distribute attention on the outputs of the Encoder.
 
-[IMAGE]
+<a href="url" align="center">
+<img src="https://github.com/IvanBongiorni/aivan/blob/gh-pages/images/seq2seq_attention_00.png">
+</a>
+
+Although it seems significantly more complicated than before, there is only one difference.
+Between Encoder and Decoder we now have an "Attention block" that at each time step t receives to inputs: the Encoder's output at t, and the Decoder's state at t-1.
+These are the elements that the Attention block needs to produce the Decoder's input at t.
+
+More closely, it works like this:
+
+<a href="url" align="center">
+<img src="https://github.com/IvanBongiorni/aivan/blob/gh-pages/images/additive_attention_block_00.png">
+</a>
 
 As shown in the picture, at each step the Decoder can “choose what to look at” the most.
 
-Attention allows the Decoder to look at the same time to multiple steps of Encoder sequence, even far back in time. In a way, the Attention mechanism plays a role not too different from the one that is played by skip connections in CNNs. It represents a “shortcut” for any useful signal present in the input sequence, that doesn’t have to traverse all the layer cells before to affect the output.
+This formulation of the mechanism is called *additive* since the context vector is obtained by summing all element-by-element products of Encoder hidden states and attention scores.
 
-This formulation of the Attention mechanism is called additive, since [EXPLANATION]
 
-Since TensorFlow 2.1, Bahdanau attention is already available in the keras.layers as AdditiveAttention(). It requires two outputs [EXPLANATION]
+Attention allows the Decoder to look at the same time to multiple steps of Encoder sequence, even far back in time. 
+In a way, the Attention mechanism plays a role not too different from the one that is played by skip connections in CNNs. 
+It represents a “shortcut” for any useful signal present in the input sequence, that doesn’t have to traverse all the layer cells before affecting the output.
+
+Since TensorFlow 2.1, Bahdanau attention is already available among keras.layers as AdditiveAttention(). It requires two outputs [EXPLANATION]
 
 <br/>
 
@@ -138,13 +153,10 @@ Attention is one of the most exciting and
 
 # Sources
 - [Bahdanau, D., Cho, K., & Bengio, Y. (2014). Neural machine translation by jointly learning to align and translate. arXiv preprint arXiv:1409.0473](https://arxiv.org/abs/1409.0473).
-- [Géron, A. (2019). Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow: Concepts, tools, and techniques to build intelligent systems. O'Reilly Media.](https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/)
-- [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/)
+- [Géron, A. (2019). Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow: Concepts, tools, and techniques to build intelligent systems. O'Reilly Media.](https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/). particularly Chapter 16, *Natural Language Processing with RNNs and Attention*.
+- [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/) by [Jay Alammar](http://jalammar.github.io/).
 - [Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008).](https://arxiv.org/abs/1706.03762)
 
-
-
-- Géron, cap sull’attenzione
 - Lezioni di DL x Stanford
 
 Other usefuls resources:
