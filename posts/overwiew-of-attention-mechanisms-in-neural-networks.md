@@ -30,7 +30,7 @@ Their problems are well known: they struggle to process long sequences.
 
 Imagine a typical seq2seq model with LSTM layers:
 
-\[IMAGE\]
+![seq2seq](images/seq2seq_00.png)
 
 Let’s assume a very relevant bit of information is located far away in the input sequence (let’s say at the very beginning of it). 
 The Encoder should generate a representation of the whole input in a single vector, making it very hard for that signal to traverse intact all LSTM cells and reach the layer output. 
@@ -97,7 +97,7 @@ In TensorFlow 2, Multiplicative Attention is implemented in keras.layers as Atte
 
 ## Self-attention
 
-Since its first applications, attentional models have been so successful to push a group of researchers at Google Brain \[Vashwani et al. 2018\] to abandon LSTM and GRU technology 
+Since its first applications, attentional models have been so successful to push a group of researchers at Google Brain \[Vaswani et al. 2018\] to abandon LSTM and GRU technology 
 and invent a new kind of neural architecture based exclusively on Attention mechanisms.
 
 That was the birth of the **Transformer**.
@@ -107,13 +107,12 @@ This architecture has an Encoder and a Decoder, each composed of an optional num
 \[IMAGE\]
 
 This architecture is more complex than previous ones (IMHO), and to describe it in detail a whole new blog post would be necessary (actually, I’m working on it). 
-In the meantime, I strongly suggest you to read the absolutely excellent post The Illustrated Transformer by \[\], a *must read* on this topic.
+In the meantime, I strongly suggest you to read the absolutely excellent The Illustrated Transformer by Jay Alamar, a *must read* post on this topic.
 
 What is most interesting here is the explore the Self-attention mechanism, proposed specifically for the new architecture.
 
 Previous attention mechanisms are all relative, i.e. a Decoder learns to produce an output sequence while paying attention to another sequence (produced by the Encoder). 
 The intuition at the basis of Self-attention instead is: let’s teach a Neural Network (or better, a part of it) to pay attention to its most important input parts. 
-
 
 
 Struttura dell’auto-attenzione e dei vettori Q V K.
@@ -136,7 +135,20 @@ Attention is one of the most exciting and
 
 
 # Sources
-Bahdanau et al
-Luong et al
-Géron, cap sull’attenzione
-Lezioni di DL x Stanford
+- [Bahdanau, D., Cho, K., & Bengio, Y. (2014). Neural machine translation by jointly learning to align and translate. arXiv preprint arXiv:1409.0473](https://arxiv.org/abs/1409.0473).
+- [Géron, A. (2019). Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow: Concepts, tools, and techniques to build intelligent systems. O'Reilly Media.](https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/)
+- [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/)
+- [Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008).](https://arxiv.org/abs/1706.03762)
+
+
+
+- Géron, cap sull’attenzione
+- Lezioni di DL x Stanford
+
+Other usefuls resources:
+
+- [Attention in RNNs](https://medium.com/datadriveninvestor/attention-in-rnns-321fbcd64f05) is a very nice article, 
+it was of great help when I was a complete beginner and wanted to understand the very basics of Attention.
+It's all about the Bahdanau mechanism, but its insights can be easily extended to Luong's.
+
+- 
