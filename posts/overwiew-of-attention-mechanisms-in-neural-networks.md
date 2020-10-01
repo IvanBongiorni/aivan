@@ -30,7 +30,10 @@ Their problems are well known: they struggle to process long sequences.
 
 Imagine a typical seq2seq model with LSTM layers:
 
-<img src="images/seq2seq_00.png">
+<div class="img-div-any-width">
+  <img src="/images/seq2seq_00.png">
+</div>
+
 
 Let’s assume a very relevant bit of information is located far away in the input sequence (let’s say at the very beginning of it). 
 The Encoder should generate a representation of the whole input in a single vector, making it very hard for that signal to traverse intact all LSTM cells and reach the layer output. 
