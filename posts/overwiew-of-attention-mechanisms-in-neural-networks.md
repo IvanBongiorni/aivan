@@ -31,7 +31,7 @@ Their problems are well known: they struggle to process long sequences.
 Imagine a typical seq2seq model with LSTM layers:
 
 <a href="url" align="center">
-<img src="https://github.com/IvanBongiorni/aivan/blob/gh-pages/images/seq2seq_00.png">
+<img src="https://raw.githubusercontent.com/IvanBongiorni/aivan/blob/gh-pages/images/seq2seq_00.png">
 </a>
 
 Let’s assume a very relevant bit of information is located far away in the input sequence (let’s say at the very beginning of it). 
@@ -62,7 +62,7 @@ That’s what they did: in a Seq2seq model, between the Encoder and Decoder, the
 nothing more than a simple feed forward layer that, for each of the steps produced by the Decoder, learns how to distribute attention on the outputs of the Encoder.
 
 <a href="url" align="center">
-<img src="https://github.com/IvanBongiorni/aivan/blob/gh-pages/images/seq2seq_attention_00.png">
+<img src="https://raw.githubusercontent.com/IvanBongiorni/aivan/blob/gh-pages/images/seq2seq_attention_00.png">
 </a>
 
 Although it seems significantly more complicated than before, there is only one difference.
@@ -72,7 +72,7 @@ These are the elements that the Attention block needs to produce the Decoder's i
 More closely, it works like this:
 
 <a href="url" align="center">
-<img src="https://github.com/IvanBongiorni/aivan/blob/gh-pages/images/additive_attention_block_00.png">
+<img src="https://raw.githubusercontent.com/IvanBongiorni/aivan/blob/gh-pages/images/additive_attention_block_00.png">
 </a>
 
 As shown in the picture, at each step the Decoder can “choose what to look at” the most.
