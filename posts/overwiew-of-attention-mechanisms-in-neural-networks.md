@@ -30,7 +30,7 @@ Their problems are well known: they struggle to process long sequences.
 
 Imagine a typical seq2seq model with LSTM layers:
 
-<div class="img-div-any-width">
+<div>
   <img src="/images/seq2seq_00.png" />
 </div>
 
