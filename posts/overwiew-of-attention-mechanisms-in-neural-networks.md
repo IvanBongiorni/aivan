@@ -76,9 +76,9 @@ More closely, it works like this:
 <img src="https://raw.githubusercontent.com/IvanBongiorni/aivan/blob/gh-pages/images/additive_attention_block_00.png">
 </a>
 
-As shown in the picture, at each step the Decoder can “choose what to look at” the most.
+As shown in the picture, at each step the Decoder can “choose what to look at” the most by combining together its last state and the current Encoder output.
 
-This formulation of the mechanism is called *additive* since the context vector is obtained by summing all element-by-element products of Encoder hidden states and attention scores.
+This formulation of the mechanism is called *additive* since the attentional output, called *context vector*, is obtained by summing all element-by-element products of Encoder hidden states and attention scores.
 
 
 Attention allows the Decoder to look at the same time to multiple steps of Encoder sequence, even far back in time. 
