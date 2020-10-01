@@ -18,4 +18,4 @@ My plan is to fill this blog with AI and ML-releted things that I find interesti
 ### Posts
 - An Overwiew of Attention Mechanisms in Deep Neural Networks   \[ WORK IN PROGRESS \]
 - Create Custom Training Functions in TensorFlow 2 (with Autograph too!)   \[ WORK IN PROGRESS \]
-
+- Many Ways of Implementing a Seq2seq in TensorFlow 2   \[ WORK IN PROGRESS \]
