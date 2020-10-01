@@ -62,9 +62,7 @@ It’s the first successful formulation of attention mechanism, proposed by Bahd
 That’s what they did: in a Seq2seq model, between the Encoder and Decoder, the added an Attention block: 
 nothing more than a simple feed forward layer that, for each of the steps produced by the Decoder, learns how to distribute attention on the outputs of the Encoder.
 
-<a href="url" align="center">
 <img src="https://raw.githubusercontent.com/IvanBongiorni/aivan/blob/gh-pages/images/seq2seq_attention_00.png">
-</a>
 
 Although it seems significantly more complicated than before, there is only one difference.
 Between Encoder and Decoder we now have an "Attention block" that at each time step t receives to inputs: the Encoder's output at t, and the Decoder's state at t-1.
