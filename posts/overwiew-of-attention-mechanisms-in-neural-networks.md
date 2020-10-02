@@ -6,6 +6,7 @@ Summary:
 - Additive attention
 - Multiplicative attention
 - Self-attention
+- Other mentions
 - Sources
 
 <br/>
@@ -127,7 +128,9 @@ That was the birth of the **Transformer**.
 
 This architecture has an Encoder and a Decoder, each composed of an optional number of blocks that look more or less like this:
 
-\[IMAGE\]
+<div>
+  <img src="../images/transformer_block_00.png">
+</div>
 
 The Transformer is more complex than previous Seq2seq models (IMHO), and to describe it in detail a whole new blog post would be necessary (actually, I’m thinking of it). 
 In the meantime, I strongly suggest you to read the excellent post The Illustrated Transformer by Jay Alamar, a *must read* article on this topic.
@@ -138,9 +141,10 @@ Previous attention mechanisms are all relative, i.e. a Decoder learns to produce
 The intuition at the basis of Self-attention instead is: let’s teach a Neural Network (or better, a part of it) to pay attention to its most important input parts. 
 In this case, the *input sequence pays attention to itself*.
 
-Struttura dell’auto-attenzione e dei vettori Q V K.
-
 \[ Formula \]
+
+This formulation is also called **Scaled Dot-product Attention**.
+This name comes from 
 
 Another important aspect is that the Transformer doesn't simply uses *one* Attention mechanism, it runs many in parallel (in the original paper, eight).
 That's what the authors called "Multi-Head Attention".
@@ -150,28 +154,141 @@ Even though Self-attention seems strictly connected with Trasformer Networks (an
 It has been used in GANs, for example \[\].
 
 
-TensorFlow 2 does not contain a built-in Self-attention layer (yet?), but it can be implemented in a relatively simple way:
+TensorFlow 2 does not contain a built-in Self-attention layer (yet?), but it is possible to implement it, and there is more than one way to do it.
+For example, if you just want to implement a bare self-attention mechanism (i.e. an Attention layer in which "the input pays attention to itself") then you can simply use an `Attention()` layer and feed the same input tensor `X` twice:
 
-\[CODE\]
+```
+from tensorflow.keras.layers import Attention
 
+self_attention = Attention(use_scale=True)([X, X])
+```
 
-Attention is one of the most exciting and 
+This will return a very basic Self-Attention scores that you can use not necessarily with Transformers.
+Notice the argument `use_scale=True`: it works similarly to the scaling factor used in Scaled Dot-Product Attention, but it's not the same.
+In Transformer architectures this scaling factor is in fact constant, while in this case it is governed by a learnable parameter.
+
+Let's assume you want to implement the exactly the same Attention mechanism used in Transformer Networks; on the TensorFlow website a whole implementation is available. 
+First, we have this function implements **scaled dot-product attention**:
+
+```
+def scaled_dot_product_attention(q, k, v, mask):
+    """Calculate the attention weights.
+    q, k, v must have matching leading dimensions.
+    k, v must have matching penultimate dimension, i.e.: seq_len_k = seq_len_v.
+    The mask has different shapes depending on its type(padding or look ahead) 
+    but it must be broadcastable for addition.
+
+    Args:
+    q: query shape == (..., seq_len_q, depth)
+    k: key shape == (..., seq_len_k, depth)
+    v: value shape == (..., seq_len_v, depth_v)
+    mask: Float tensor with shape broadcastable 
+          to (..., seq_len_q, seq_len_k). Defaults to None.
+
+    Returns:
+    output, attention_weights
+    """
+
+    matmul_qk = tf.matmul(q, k, transpose_b=True)  # (..., seq_len_q, seq_len_k)
+
+    # scale matmul_qk
+    dk = tf.cast(tf.shape(k)[-1], tf.float32)
+    scaled_attention_logits = matmul_qk / tf.math.sqrt(dk)
+
+    # add the mask to the scaled tensor.
+    if mask is not None: 
+        scaled_attention_logits += (mask * -1e9)  
+
+    # softmax is normalized on the last axis (seq_len_k) so that the scores
+    # add up to 1.
+    attention_weights = tf.nn.softmax(scaled_attention_logits, axis=-1)  # (..., seq_len_q, seq_len_k)
+
+    output = tf.matmul(attention_weights, v)  # (..., seq_len_q, depth_v)
+
+    return output, attention_weights
+```
+
+Second, a new **Self-Attention layer** can be then implemented:
+
+```
+class MultiHeadAttention(tf.keras.layers.Layer):
+    def __init__(self, d_model, num_heads):
+        super(MultiHeadAttention, self).__init__()
+        self.num_heads = num_heads
+        self.d_model = d_model
+        
+        assert d_model % self.num_heads == 0
+        
+        self.depth = d_model // self.num_heads
+        
+        self.wq = tf.keras.layers.Dense(d_model)
+        self.wk = tf.keras.layers.Dense(d_model)
+        self.wv = tf.keras.layers.Dense(d_model)
+        
+        self.dense = tf.keras.layers.Dense(d_model)
+        
+    def split_heads(self, x, batch_size):
+        """Split the last dimension into (num_heads, depth).
+        Transpose the result such that the shape is (batch_size, num_heads, seq_len, depth)
+        """
+        x = tf.reshape(x, (batch_size, -1, self.num_heads, self.depth))
+        return tf.transpose(x, perm=[0, 2, 1, 3])
+    
+    def call(self, v, k, q, mask):
+        batch_size = tf.shape(q)[0]
+        
+        q = self.wq(q)  # (batch_size, seq_len, d_model)
+        k = self.wk(k)  # (batch_size, seq_len, d_model)
+        v = self.wv(v)  # (batch_size, seq_len, d_model)
+        
+        q = self.split_heads(q, batch_size)  # (batch_size, num_heads, seq_len_q, depth)
+        k = self.split_heads(k, batch_size)  # (batch_size, num_heads, seq_len_k, depth)
+        v = self.split_heads(v, batch_size)  # (batch_size, num_heads, seq_len_v, depth)
+        
+        # scaled_attention.shape == (batch_size, num_heads, seq_len_q, depth)
+        # attention_weights.shape == (batch_size, num_heads, seq_len_q, seq_len_k)
+        scaled_attention, attention_weights = scaled_dot_product_attention(q, k, v, mask)
+    
+    scaled_attention = tf.transpose(scaled_attention, perm=[0, 2, 1, 3])  # (batch_size, seq_len_q, num_heads, depth)
+
+    concat_attention = tf.reshape(scaled_attention, 
+                                  (batch_size, -1, self.d_model))  # (batch_size, seq_len_q, d_model)
+
+    output = self.dense(concat_attention)  # (batch_size, seq_len_q, d_model)
+        
+    return output, attention_weights
+```
+
+This will work just like any other Keras layer.
 
 <br/>
 
 
-# Sources
-- [Bahdanau, D., Cho, K., & Bengio, Y. (2014). Neural machine translation by jointly learning to align and translate. arXiv preprint arXiv:1409.0473](https://arxiv.org/abs/1409.0473).
-- [Géron, A. (2019). Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow: Concepts, tools, and techniques to build intelligent systems. O'Reilly Media.](https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/). particularly Chapter 16, *Natural Language Processing with RNNs and Attention*.
-- [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/) by [Jay Alammar](http://jalammar.github.io/).
-- [Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008).](https://arxiv.org/abs/1706.03762)
+## Quick conclusion
 
-- Lezioni di DL x Stanford
+Attention is one of the most exciting developments in the fiels of Deep Learning, and the rise of Transformers is a proof of their absolute importance.
+There are many formulations of Attention that I overlooked because of a lack of space.
+One notable mention is the difference between **Local** and **Global Attention**, where one is confined to a given time window in the input sequence, while the other
+Again, choosing between the two is another trade off between computational costs and.
+
+Countless formulations of Attention mechanism have been invented since 2014.
+Somebody tried using Convolutional layers in the Attention block.
+Someone else
+
+
+<br/>
+
+
+## Sources
+- [Bahdanau, D., Cho, K., & Bengio, Y. (2014). Neural machine translation by jointly learning to align and translate. arXiv preprint arXiv:1409.0473](https://arxiv.org/abs/1409.0473).
+- [Géron, A. (2019). Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow: Concepts, tools, and techniques to build intelligent systems. O'Reilly Media](https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/); particularly Chapter 16, *Natural Language Processing with RNNs and Attention*.
+- [Luong, M. T., Pham, H., & Manning, C. D. (2015). Effective approaches to attention-based neural machine translation. arXiv preprint arXiv:1508.04025](https://arxiv.org/abs/1508.04025).
+- [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/) by [Jay Alammar](http://jalammar.github.io/).
+- [Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008)](https://arxiv.org/abs/1706.03762).
 
 Other usefuls resources:
 
 - [Attention in RNNs](https://medium.com/datadriveninvestor/attention-in-rnns-321fbcd64f05) is a very nice article, 
 it was of great help when I was a complete beginner and wanted to understand the very basics of Attention.
 It's all about the Bahdanau mechanism, but its insights can be easily extended to Luong's.
-
-- 
+- The full 2019 Stanford course on Natural Language Processing with Deep Learning, by Chris Manning. If you want to go for the heavy stuff, this is highly technical but extremely rewarding
