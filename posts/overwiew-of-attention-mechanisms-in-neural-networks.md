@@ -2,11 +2,11 @@
 
 Summary:
 
-- Limits of vanilla seq2seq models
+- Limits of "vanilla" seq2seq models
 - Additive attention
 - Multiplicative attention
 - Self-attention
-- Other mentions
+- Honourable mentions
 - Sources
 
 <br/>
@@ -14,8 +14,8 @@ Summary:
 Attention in Deep Learning is one of the most powerful and interesting tools of the last years.
 It revolutionized the implementation and the application of seq2seq architectures, and consequently the whole field of NLP.
 
-One of the most fascinating aspects of attention mechanisms is a strong biological analogy, i.e. the way it works is very similar to the way we usually thing about our own attention.
-In fact, we can think of it as some sort of "mental heatmap" in which the most important elements of our empirical input are fired up, to the detriment of its less relevant bits. 
+One of the most fascinating aspects of attention mechanisms is a strong biological analogy, i.e. the way it works is very similar to the way we usually picture *our* attention.
+In fact, we can think of it as some sort of "mental heatmap" in which the most important elements of our empirical input are "fired up", to the detriment of its less relevant bits. 
 The whole point of attention mechanisms is just that: let’s teach artificial neural networks to understand what elements of its input it should care about the most, and what others instead can be overlooked.
 
 <br/>
@@ -23,20 +23,20 @@ The whole point of attention mechanisms is just that: let’s teach artificial n
 
 ## Limits of “vanilla” Seq2seq models
 
-Current attention mechanisms come from research on Seq2seq networks, which goal is to transform an input sequence into another (sorry for oversimplifying, but I don’t want to waste your time). 
-They are constituted of an Encoder generating a representation of the input sequence, and a Decoder that receives it and produces another sequence as output. 
-Before the rise of Transformer networks, Seq2seq models use to be the SOTA in important fields of Deep Learning such as NMT, chatbots, text summarization and image captioning.
+Current attention mechanisms come from research on **Seq2seq networks**, which goal is to transform an input sequence into another (sorry for oversimplifying, but I don’t want to waste your time). 
+Before the rise of Transformer networks, Seq2seq models use to be the SOTA in important fields of Deep Learning such as NMT, chatbots, and text summarization.
 
 Their problems are well known: *they struggle to process long sequences*.
 
-Imagine a typical seq2seq model with LSTM layers:
+Imagine a typical seq2seq model with Recurrent (LSTM or GRU) layers:
 
 <div>
   <img src="../images/seq2seq_00.png">
 </div>
 
-Assume a very relevant bit of information is located far away in the input sequence (let’s say at the very beginning of it). 
-The Encoder should generate a representation of the whole input in a single vector, making it very hard for that signal to traverse intact all LSTM cells and reach the layer output. 
+Thn encoder generates a representation of the input sequence, and a decoder receives it and produces another sequence as output. 
+What happens when a very relevant bit of information is located far away in the input sequence (let’s say at the very beginning of it)? 
+The Encoder should generate a representation of the whole input in a single vector, making it very hard for that signal to traverse intact all Recurrent cells and reach the layer output. 
 That’s why “vanilla” Seq2seq struggle in translating long pieces of text. 
 (The introduction of bidirectional Recurrent layers improved significantly the performance of RNNs, but it alleviated the problem rather than solving it.)
 
@@ -44,7 +44,7 @@ Moreover, it’s not how we translate things.
 Imagine someone told you to translate an article from Italian to English: you don’t read the whole text, memorize it, and then say: “Got it! Let me write it all down in English!”. 
 That’t not how we do. Rather, we’d constantly check the original and the translation, jumping from one to the other countless times. 
 
-That’s what attention mechanisms is meant to accomplish.
+That’s what attention mechanisms are meant to accomplish.
 
 In this post I will review the three main kinds of attention mechanism:
 - Additive attention
@@ -58,17 +58,16 @@ I will explain how they work, and how attention layers can be quickly called or 
 
 ##  Additive attention
 
-It’s the first successful formulation of attention mechanism, proposed by **Bahdanau et al.** in 2014.
-That’s what they did: in a Seq2seq model, between the Encoder and Decoder, the added an **Attention block**: 
-nothing more than a simple feed forward layer that, for each of the steps produced by the Decoder, learns how to distribute attention on the outputs of the Encoder.
+It’s the first successful formulation of attention mechanism, proposed by [Bahdanau et al.](https://arxiv.org/abs/1409.0473) in 2014.
+That’s what they did: in a Seq2seq model, between encoder and decoder, they added an **Attention block**: 
 
 <div>
   <img src="../images/seq2seq_attention_00.png">
 </div>
 
-Although it seems significantly more complicated than before, there is only one difference.
-Between Encoder and Decoder we now have an "Attention block" that at each time step t receives to inputs: the Encoder's output at t, and the Decoder's state at t-1.
-These are the elements that the Attention block needs to produce the Decoder's input at t.
+Although the image above seems significantly more complicated than before, I promise it isn't.
+The attention block, at each time step t, receives the encoder's output at t and the decoder's state at t-1, and outputs a **context vector** that is used to compute the decoder's state at time t.
+That's why you see the decoder sending and receiving stuff to and from the attention block.
 
 More closely, it works like this:
 
@@ -76,12 +75,12 @@ More closely, it works like this:
   <img src="../images/additive_attention_block_00.png">
 </div>
 
-As shown in the picture, at each step the Decoder can "choose what to look at" more by combining together its previous hidden state and the current Encoder output. 
-The term "additive" comes from this.
+At each time step the decoder can "choose what to look at" by combining together its previous hidden state (at t-1) and the current Encoder output (at t). 
+The term "additive" comes from their combination, that is why it was also called *concatenative attention*.
 
-Attention allows the Decoder to look at the same time to multiple steps of Encoder sequence, even far back in time. 
-In a way, the Attention mechanism plays a role not too different from the one that is played by skip connections in CNNs. 
-It represents a "shortcut" for any useful signal present in the input sequence, that doesn’t have to traverse all the layer cells before affecting the output.
+Attention allows the decoder to look at the same time to multiple steps of encoder sequence, even far back in time. 
+In a way, the attention mechanism plays a role not too different from the one that is played by skip connections in CNNs. 
+It represents a "shortcut" for useful signals present in the input sequence, that now don’t have to traverse all the layer cells before affecting the output.
 
 Since **TensorFlow 2.1**, Bahdanau attention is already available among `keras.layers` as `AdditiveAttention()`. It requires two inputs \[EXPLANATION\]
 
@@ -90,26 +89,10 @@ Since **TensorFlow 2.1**, Bahdanau attention is already available among `keras.l
 
 ## Multiplicative attention
 
-L’attenzione moltiplicativa è stata proposta da Luong et al poco dopo la formulazione additiva.
+This formulation of attention was proposed one year later by [Luong et al. \[2015\]](https://arxiv.org/abs/1508.04025)
 
-Miglioramento da parte di Luong et al.
-In realtà, non ne è stato proposto un solo tipo, ma diversi: [elenco]
-
-[spiega I vantaggi dell’attenzione moltiplicativa presi da Géron]
-
-The difference from Bahdanau Attention is in how the Encoder outputs and the Decoder's previous hidden states are combined.
-In this case, Attention is computed as a *dot product* of these two elements.
-
-Another advantage is that this operation is computationally much faster, compared to Additive Attention.
-
-Today, Multiplicative Attention is considered superior to its additive couterpart.
-In everyday's work, generally talking about "attention" means Luong's.
-
-
-In fact, not one but three Multiplicative attentions have been proposed:
-- make
-- list
-- formulae
+The difference is in the way the two inputs of the attention block (decoder's state at time step t-1 and encoder outputs at time step t) are combined together.
+In this case, attention is computed as a *dot product* of these two elements.
 
 Multiplicative Attention was proved superior in performance, while allowing for faster training at the same time.
 Because of this, this formulation of Attention is now considered the standard for Seq2seq implementations, and when we generically refer to "Attention" we mean Luong at al.'s.
@@ -121,8 +104,9 @@ In **TensorFlow 2**, Multiplicative Attention is implemented in `keras.layers` a
 
 ## Self-attention
 
-Since its first applications, attentional models have been so successful to push a group of researchers at Google Brain \[Vaswani et al. 2018\] to abandon LSTM and GRU technology 
-and invent a new kind of neural architecture based exclusively on Attention mechanisms.
+Since its first applications, attentional models have been so successful to push a group of researchers at 
+Google Brain [\[Vaswani et al. 2018\]](https://arxiv.org/abs/1706.03762) to abandon LSTM and GRU technology 
+and invent a new kind of neural architecture based exclusively on attention.
 
 That was the birth of the **Transformer**.
 
@@ -133,28 +117,32 @@ This architecture has an Encoder and a Decoder, each composed of an optional num
 </div>
 
 The Transformer is more complex than previous Seq2seq models (IMHO), and to describe it in detail a whole new blog post would be necessary (actually, I’m thinking of it). 
-In the meantime, I strongly suggest you to read the excellent post The Illustrated Transformer by Jay Alamar, a *must read* article on this topic.
+In the meantime, I strongly suggest you to read the excellent post [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/) by [Jay Alammar](http://jalammar.github.io/), 
+a *must read* article on this topic.
 
-What is most interesting here is to explore the **Self-attention** mechanism, proposed specifically for this new architecture.
+What is most interesting here is to explore the **self-attention** mechanism, proposed specifically for this new architecture.
 
-Previous attention mechanisms are all relative, i.e. a Decoder learns to produce an output sequence while paying attention to another sequence (produced by the Encoder). 
-The intuition at the basis of Self-attention instead is: let’s teach a Neural Network (or better, a part of it) to pay attention to its most important input parts. 
-In this case, the *input sequence pays attention to itself*.
+Previous attention mechanisms are all relative, i.e. a decoder learns to produce an output sequence while paying attention to another sequence (produced by the encoder). 
+Here instead, the *input sequence pays attention to itself*.
 
 \[ Formula \]
 
-This formulation is also called **Scaled Dot-product Attention**.
-This name comes from 
+This formulation is also called **scaled dot-product attention**.
+
+This attention is "dot-product", meaning it's of multiplicative kind, and "scaled" because of the constant scaling parameter.
+
+SPIEGA IL PARAMETRO DI SCALATURA, RAGIONI PER CUI L'HANNO MESSO
 
 Another important aspect is that the Transformer doesn't simply uses *one* Attention mechanism, it runs many in parallel (in the original paper, eight).
-That's what the authors called "Multi-Head Attention".
-The logic behind implementing multiple, identical Self-attention mechanisms in parallel is that in this way the Network can use different mechanisms to pay attention at different thins at the same time.
+That's what the authors called **multi-head attention**.
+The logic behind implementing multiple, identical self-attention mechanisms in parallel is that in this way the network can use different mechanisms to pay attention at different things at the same time.
 
-Even though Self-attention seems strictly connected with Trasformer Networks (and it is), it could in theory be applied to other architectures as well, such as CNNs and RNNs. 
-It has been used in GANs, for example [\[Zhang et al. 2019 \]](https://arxiv.org/abs/1805.08318).
+Even though self-attention seems strictly connected with Trasformer networks (and it is), it could in theory be applied to other architectures as well. 
+It has been used in GANs, for example [\[Zhang et al. 2019\]](https://arxiv.org/abs/1805.08318).
 
-TensorFlow 2 does not contain a built-in Self-attention layer (yet?), but it is possible to implement it, and there is more than one way to do it.
-For example, if you just want to implement a bare self-attention mechanism (i.e. an Attention layer in which "the input pays attention to itself") then you can simply use an `Attention()` layer and feed the same input tensor `X` twice:
+TensorFlow 2 does not contain a built-in self-attention layer (yet?), but it is possible to implement it, and there is more than one way to do it.
+For example, if you just want to implement a bare self-attention mechanism (i.e. an attention layer in which "the input pays attention to itself") 
+then you can simply use an `Attention()` layer and feed the same input tensor `X` twice:
 
 ```
 from tensorflow.keras.layers import Attention
@@ -162,11 +150,12 @@ from tensorflow.keras.layers import Attention
 self_attention = Attention(use_scale=True)([X, X])
 ```
 
-This will return a very basic Self-Attention scores that you can use not necessarily with Transformers.
-Notice the argument `use_scale=True`: it works similarly to the scaling factor used in Scaled Dot-Product Attention, but it's not the same.
-In Transformer architectures this scaling factor is in fact constant, while in this case it is governed by a learnable parameter.
+This will return a simple self-Attention tensor that you can use in a neural network of your choice, not necessarily a Transformer.
+Notice the argument `use_scale=True`: it works similarly to the scaling factor used in scaled dot-product attention, but it's not the same: 
+in Transformer networks this scaling factor is constant, while in this case it is learned.
 
-Let's assume you want to implement the exactly the same Attention mechanism used in Transformer Networks; on the TensorFlow website a whole implementation is available. 
+But let's assume you want to implement the *exactly* the same attention mechanism used in Transformers: 
+on the TensorFlow website [a whole implementation](https://www.tensorflow.org/tutorials/text/transformer) is available. 
 First, we have this function for **scaled dot-product attention**:
 
 ```
@@ -291,3 +280,4 @@ it was of great help when I was a complete beginner and wanted to understand the
 It's all about the Bahdanau mechanism, but its insights can be easily extended to Luong's.
 - The full 2019 Stanford course [CS224N: Natural Language Processing with Deep Learning](https://www.youtube.com/playlist?list=PLoROMvodv4rOhcuXMZkNm7j3fVwBBY42z), by Chris Manning. 
 If you want to go for the heavy stuff, this is highly technical but extremely rewarding. The quality of guest lecturers is extremely high.
+- The official TensorFlow tutorial on how to implement a [Transformer model for language understanding](https://www.tensorflow.org/tutorials/text/transformer).
