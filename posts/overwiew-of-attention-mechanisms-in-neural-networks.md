@@ -151,8 +151,7 @@ That's what the authors called "Multi-Head Attention".
 The logic behind implementing multiple, identical Self-attention mechanisms in parallel is that in this way the Network can use different mechanisms to pay attention at different thins at the same time.
 
 Even though Self-attention seems strictly connected with Trasformer Networks (and it is), it could in theory be applied to other architectures as well, such as CNNs and RNNs. 
-It has been used in GANs, for example \[\].
-
+It has been used in GANs, for example [\[Zhang et al. 2019 \]](https://arxiv.org/abs/1805.08318).
 
 TensorFlow 2 does not contain a built-in Self-attention layer (yet?), but it is possible to implement it, and there is more than one way to do it.
 For example, if you just want to implement a bare self-attention mechanism (i.e. an Attention layer in which "the input pays attention to itself") then you can simply use an `Attention()` layer and feed the same input tensor `X` twice:
@@ -168,7 +167,7 @@ Notice the argument `use_scale=True`: it works similarly to the scaling factor u
 In Transformer architectures this scaling factor is in fact constant, while in this case it is governed by a learnable parameter.
 
 Let's assume you want to implement the exactly the same Attention mechanism used in Transformer Networks; on the TensorFlow website a whole implementation is available. 
-First, we have this function implements **scaled dot-product attention**:
+First, we have this function for **scaled dot-product attention**:
 
 ```
 def scaled_dot_product_attention(q, k, v, mask):
@@ -287,8 +286,8 @@ Someone else
 - [Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008)](https://arxiv.org/abs/1706.03762).
 
 Other usefuls resources:
-
 - [Attention in RNNs](https://medium.com/datadriveninvestor/attention-in-rnns-321fbcd64f05) is a very nice article, 
 it was of great help when I was a complete beginner and wanted to understand the very basics of Attention.
 It's all about the Bahdanau mechanism, but its insights can be easily extended to Luong's.
-- The full 2019 Stanford course on Natural Language Processing with Deep Learning, by Chris Manning. If you want to go for the heavy stuff, this is highly technical but extremely rewarding
+- The full 2019 Stanford course [CS224N: Natural Language Processing with Deep Learning](https://www.youtube.com/playlist?list=PLoROMvodv4rOhcuXMZkNm7j3fVwBBY42z), by Chris Manning. 
+If you want to go for the heavy stuff, this is highly technical but extremely rewarding. The quality of guest lecturers is extremely high.
