@@ -270,7 +270,10 @@ Attention is one of the most exciting developments in the fiels of Deep Learning
 There are many formulations of Attention that I overlooked because of a lack of space.
 One notable mention is the difference between **Local** and **Global Attention**, where one is confined to a given time window in the input sequence, while the other uses all encoder's states.
 
-Countless formulations of attention mechanism have been invented since 2014. For example [Yang et al. \[2019\]](https://arxiv.org/abs/1904.03107) proposed *convolutional self-attention*, while [Yin et al. \[2019\]](https://arxiv.org/abs/1512.05193) developed attention-based CNNs. Lots of work has been done to extend applications of attention from NLP to computer vision. The *Image Transformer* is one of the most notable examples \[Parmar et al. 2018\](https://arxiv.org/abs/1802.05751).
+Countless formulations of attention mechanism have been invented since 2014. 
+For example [Yang et al. \[2019\]](https://arxiv.org/abs/1904.03107) proposed *convolutional self-attention*, while [Yin et al. \[2019\]](https://arxiv.org/abs/1512.05193) developed attention-based CNNs. 
+Lots of work has been done to extend applications of attention from NLP to computer vision. 
+The *Image Transformer* is one of the most notable examples [\[Parmar et al. 2018\]](https://arxiv.org/abs/1802.05751).
 
 <br/>
 
