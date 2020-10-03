@@ -82,7 +82,7 @@ Attention allows the decoder to look at the same time to multiple steps of encod
 In a way, the attention mechanism plays a role not too different from the one that is played by skip connections in CNNs.
 It represents a "shortcut" for useful signals present in the input sequence, that now don’t have to traverse all the layer cells before affecting the output.
 
-Since **TensorFlow 2.1**, Bahdanau attention is already available among `keras.layers` as `AdditiveAttention()`.
+Since **TensorFlow 2.1**, Bahdanau is already available among `keras.layers` as `AdditiveAttention()`.
 
 As explained in [the docs](https://www.tensorflow.org/api_docs/python/tf/keras/layers/Attention), it takes three inputs: **query**, **value** and **key** tensors (Q, K, V, respectively).
 Most of the times however, only Q and V are fed: the same tensor for V is used for K as well.
@@ -137,20 +137,20 @@ Here instead, the *input sequence pays attention to itself*.
 
 ![tattn](https://latex.codecogs.com/gif.latex?Attention(Q,K,V)=softmax_k(\frac{QK^T}{\sqrt{d_k}})V)
 
-\[ Why there is a scaling factor in self attention??? \]
-
 This formulation is also called **scaled dot-product attention**.
+It is "dot-product", meaning it's of multiplicative kind, and "scaled" because of the constant scaling parameter
+(![d_k](https://latex.codecogs.com/gif.latex?d_k) is the square root of the number of units in the K vector).
+Its purpose is to stabilize the softmax function:
+values otherwise too large would push the softmax in extreme regions with extremely small gradients,
+causing suboptimal performance (please refer to the [original paper](https://arxiv.org/abs/1706.03762) for a deeper explanation).
 
-This attention is "dot-product", meaning it's of multiplicative kind, and "scaled" because of the constant scaling parameter.
-
-SPIEGA IL PARAMETRO DI SCALATURA, RAGIONI PER CUI L'HANNO MESSO
-
-Another important aspect is that the Transformer doesn't simply uses *one* Attention mechanism, it runs many in parallel (in the original paper, eight).
+Another important aspect is that the Transformer doesn't simply uses *one* Attention mechanism, it runs many in parallel
+(in the original paper, eight).
 That's what the authors called **multi-head attention**.
 The logic behind implementing multiple, identical self-attention mechanisms in parallel is that in this way the network can use different mechanisms to pay attention at different things at the same time.
 
 Even though self-attention seems strictly connected with Trasformer networks (and it is), it could in theory be applied to other architectures as well.
-It has been used in GANs, for example [\[Zhang et al. 2019\]](https://arxiv.org/abs/1805.08318).
+For example, it has been used in [GANs](https://arxiv.org/abs/1805.08318) and [Reinforcement Learning](https://dl.acm.org/doi/10.1145/3325730.3325743)\].
 
 TensorFlow 2 does not contain a built-in self-attention layer (yet?), but it is possible to implement it, and there is more than one way to do it.
 For example, if you just want to implement a bare self-attention mechanism (i.e. an attention layer in which "the input pays attention to itself")
@@ -268,13 +268,9 @@ This will work just like any other Keras layer.
 
 Attention is one of the most exciting developments in the fiels of Deep Learning, and the rise of Transformers is a proof of their absolute importance.
 There are many formulations of Attention that I overlooked because of a lack of space.
-One notable mention is the difference between **Local** and **Global Attention**, where one is confined to a given time window in the input sequence, while the other
-Again, choosing between the two is another trade off between computational costs and.
+One notable mention is the difference between **Local** and **Global Attention**, where one is confined to a given time window in the input sequence, while the other uses all encoder's states.
 
-Countless formulations of Attention mechanism have been invented since 2014.
-Somebody tried using Convolutional layers in the Attention block.
-Someone else
-
+Countless formulations of attention mechanism have been invented since 2014. For example [Yang et al. \[2019\]](https://arxiv.org/abs/1904.03107) proposed *convolutional self-attention*, while [Yin et al. \[2019\]](https://arxiv.org/abs/1512.05193) developed attention-based CNNs. Lots of work has been done to extend applications of attention from NLP to computer vision. The *Image Transformer* is one of the most notable examples \[Parmar et al. 2018\](https://arxiv.org/abs/1802.05751).
 
 <br/>
 
@@ -283,8 +279,13 @@ Someone else
 - [Bahdanau, D., Cho, K., & Bengio, Y. (2014). Neural machine translation by jointly learning to align and translate. arXiv preprint arXiv:1409.0473](https://arxiv.org/abs/1409.0473).
 - [Géron, A. (2019). Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow: Concepts, tools, and techniques to build intelligent systems. O'Reilly Media](https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/); particularly Chapter 16, *Natural Language Processing with RNNs and Attention*.
 - [Luong, M. T., Pham, H., & Manning, C. D. (2015). Effective approaches to attention-based neural machine translation. arXiv preprint arXiv:1508.04025](https://arxiv.org/abs/1508.04025).
+- [Shen, X., Yin, C., & Hou, X. (2019, April). Self-Attention for Deep Reinforcement Learning. In Proceedings of the 2019 4th International Conference on Mathematics and Artificial Intelligence (pp. 71-75)](https://dl.acm.org/doi/10.1145/3325730.3325743).
 - [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/) by [Jay Alammar](http://jalammar.github.io/).
 - [Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008)](https://arxiv.org/abs/1706.03762).
+- [Yang, B., Wang, L., Wong, D., Chao, L. S., & Tu, Z. (2019). Convolutional self-attention networks. arXiv preprint arXiv:1904.03107](https://arxiv.org/abs/1904.03107).
+- [Yin, W., Schütze, H., Xiang, B., & Zhou, B. (2016). Abcnn: Attention-based convolutional neural network for modeling sentence pairs. Transactions of the Association for Computational Linguistics, 4, 259-272](https://arxiv.org/abs/1512.05193).
+- [Zhang, H., Goodfellow, I., Metaxas, D., & Odena, A. (2019, May). Self-attention generative adversarial networks. In International Conference on Machine Learning (pp. 7354-7363). PMLR](https://arxiv.org/abs/1805.08318).
+-
 
 Other usefuls resources:
 - [Attention in RNNs](https://medium.com/datadriveninvestor/attention-in-rnns-321fbcd64f05) is a very nice article,
