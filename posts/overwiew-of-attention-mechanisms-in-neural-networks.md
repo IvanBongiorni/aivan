@@ -285,7 +285,6 @@ Countless formulations of attention mechanism have been invented since 2014. For
 - [Yang, B., Wang, L., Wong, D., Chao, L. S., & Tu, Z. (2019). Convolutional self-attention networks. arXiv preprint arXiv:1904.03107](https://arxiv.org/abs/1904.03107).
 - [Yin, W., Schütze, H., Xiang, B., & Zhou, B. (2016). Abcnn: Attention-based convolutional neural network for modeling sentence pairs. Transactions of the Association for Computational Linguistics, 4, 259-272](https://arxiv.org/abs/1512.05193).
 - [Zhang, H., Goodfellow, I., Metaxas, D., & Odena, A. (2019, May). Self-attention generative adversarial networks. In International Conference on Machine Learning (pp. 7354-7363). PMLR](https://arxiv.org/abs/1805.08318).
--
 
 Other usefuls resources:
 - [Attention in RNNs](https://medium.com/datadriveninvestor/attention-in-rnns-321fbcd64f05) is a very nice article,
