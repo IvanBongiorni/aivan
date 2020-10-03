@@ -6,7 +6,7 @@ Summary:
 - Additive attention
 - Multiplicative attention
 - Self-attention
-- Honourable mentions
+- Honorable mentions
 - Sources
 
 <br/>
@@ -14,7 +14,7 @@ Summary:
 Attention in Deep Learning is one of the most powerful and interesting tools of the last years.
 It revolutionized the implementation and the application of seq2seq architectures, and consequently the whole field of NLP.
 
-One of the most fascinating aspects of attention mechanisms is a strong biological analogy, i.e. the way it works is very similar to the way we usually picture *our* attention.
+One of the most fascinating aspects of attention mechanisms is a strong biological analogy: the way it works is very similar to the way we usually picture *our* attention.
 In fact, we can think of it as some sort of "mental heatmap" in which the most important elements of our empirical input are "fired up", to the detriment of its less relevant bits. 
 The whole point of attention mechanisms is just that: let’s teach artificial neural networks to understand what elements of its input it should care about the most, and what others instead can be overlooked.
 
@@ -38,7 +38,7 @@ Thn encoder generates a representation of the input sequence, and a decoder rece
 What happens when a very relevant bit of information is located far away in the input sequence (let’s say at the very beginning of it)? 
 The Encoder should generate a representation of the whole input in a single vector, making it very hard for that signal to traverse intact all Recurrent cells and reach the layer output. 
 That’s why “vanilla” Seq2seq struggle in translating long pieces of text. 
-(The introduction of bidirectional Recurrent layers improved significantly the performance of RNNs, but it alleviated the problem rather than solving it.)
+(The introduction of bidirectional Recurrent layers improved significantly their performance, but it alleviated the problem rather than solving it.)
 
 Moreover, it’s not how we translate things. 
 Imagine someone told you to translate an article from Italian to English: you don’t read the whole text, memorize it, and then say: “Got it! Let me write it all down in English!”. 
@@ -51,7 +51,7 @@ In this post I will review the three main kinds of attention mechanism:
 - Multiplicative attention
 - Self-attention
 
-I will explain how they work, and how attention layers can be quickly called or implemented in TensorFlow 2.x.
+I will explain how they work, and how attention layers can be quickly called or implemented in **TensorFlow 2**.
 
 <br/>
 
@@ -66,7 +66,7 @@ That’s what they did: in a Seq2seq model, between encoder and decoder, they ad
 </div>
 
 Although the image above seems significantly more complicated than before, I promise it isn't.
-The attention block, at each time step t, receives the encoder's output at t and the decoder's state at t-1, and outputs a **context vector** that is used to compute the decoder's state at time t.
+The attention block, at each time step ![t](https://latex.codecogs.com/gif.latex?t), receives the encoder's output at t and the decoder's state at t-1, and outputs a **context vector** that is used to compute the decoder's state at time t.
 That's why you see the decoder sending and receiving stuff to and from the attention block.
 
 More closely, it works like this:
@@ -252,7 +252,7 @@ This will work just like any other Keras layer.
 <br/>
 
 
-## Quick conclusion
+## Honorable mentions
 
 Attention is one of the most exciting developments in the fiels of Deep Learning, and the rise of Transformers is a proof of their absolute importance.
 There are many formulations of Attention that I overlooked because of a lack of space.
