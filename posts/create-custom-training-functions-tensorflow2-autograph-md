@@ -1,0 +1,53 @@
+# Create Custom Training Functions in TensorFlow 2 (with Autograph too!)
+
+INTRODUZIONE TENSORFLOW 2
+Caratteristiche di TF1 che sono state abbandonate
+programmazione simbolica
+prima disegni il grafo computazionale
+poi lo esegui facendo fluire dei tensori al suo interno
+
+ora tf2 ha una più convenzionale eager execution
+è molto più semplice al normale uso di Python - così come pytorch
+
+Integrazione con Keras
+ormai è una parte inscindibile della libreria
+il modo in cui si 
+Training con model.fit
+
+
+CREARE CUSTOM TRAINING
+a volte però è necessario utilizzare delle funzioni di training customizzate
+perché?
+a volte sembra necessario per adattare il training
+esempi:
+custom data augmentation - se ti serve una
+GAN - questo è un esempio a cui ho lavorato
+
+Proporre il modello con tf.GradientTape()
+
+Esempio della funzione
+
+ESEMPIO
+
+
+VELOCIZZARE LA FUNZIONE CON Autograph E IL @tf.function
+Mettere il decoratore
+
+A che serve il decoratore?
+Serve a trasformare una funzione python in una funzione tensorflow
+il core di tf/keras infatti è stato programmato in C++, che viene eseguito molto più velocemente rispetto al codice Python che vediamo
+trasformare una funzione Python in una tf op rende l'esecuzione un orgine di grandezza più veloce.
+
+basta porre il decoratore @tf.function sulla funzione
+in questo modo il compilatore
+converte la funzione in un grafo computazionale (si, proprio come quelli di tf 1!), che noi non possiamo più vedere ma che continuano a esistere
+
+Ci sono però delle condizioni da rispettare: 
+l'input della funzione deve sempre essere un array numpy.
+tutte le funzioni all'interno della funzione con @tf.function devono contenere altre tf op
+in questo modo il compilatore le può trasformare in grafo.
+esempio: usa tf.where invece di np.where
+usa tf.cast(x, tf.float32) invece di x.astype(np.float32)
+se hai un loop, non utilizzare range() ma tf.range() - il compilatore convertirà automaticamente il loop in un tf.while_loop()
+
+
