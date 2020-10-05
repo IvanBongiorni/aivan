@@ -116,6 +116,7 @@ You just take the `@tf.function` decorator and put it on top of your training fu
 Like that:
 
 ```
+@tf.function
 def train_step():
     with tf.GradientTape() as tape:
         current_loss = loss(model(X_batch), y_batch)
