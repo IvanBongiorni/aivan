@@ -13,7 +13,7 @@ They are all based on custom training functions, and they can be seen as a more 
 <br/>
 
 
-## Training model from TensorFlow 1.x to 2.x
+## Training models from TensorFlow 1.x to 2.x
 
 TensorFlow 1.x was based on symbolic programming, worked very differently from how we usually think about code.
 In fact, you couldn't simply write down an operation (let's say, an addition like c=a+b) and observe its execution on the spot,
