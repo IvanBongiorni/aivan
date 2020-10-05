@@ -17,5 +17,5 @@ My plan is to fill this blog with AI and ML-releted things that I find interesti
 
 ### Posts
 - [An Overwiew of Attention Mechanisms in Neural Networks](https://ivanbongiorni.github.io/aivan/posts/overwiew-of-attention-mechanisms-in-neural-networks.html).
-- Create Custom Training Functions in TensorFlow 2 (with Autograph too!)   \[ WORK IN PROGRESS \]
+- [Create Custom Training Functions in TensorFlow 2 (with Autograph too!)](https://ivanbongiorni.github.io/aivan/posts/create-custom-training-functions-tensorflow2-autograph.html)
 - Many Ways of Implementing a Seq2seq in TensorFlow 2   \[ WORK IN PROGRESS \]
